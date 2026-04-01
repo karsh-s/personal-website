@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Karshin Sachdeva</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { padding:0; margin:0; box-sizing:border-box; border:0; }
+:root { --sans:'Space Grotesk',sans-serif; --mono:'Space Mono',monospace; }
+
+html, body {
+  width:100%;
+  height:100%;
+  background:#080808;
+  color:#e8e6f0;
+  font-family:var(--sans);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+body {
+  position:relative;
+  isolation:isolate;
+}
+
+#flower-canvas {
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  display:block;
+  width:100vw;
+  height:100vh;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  will-change:transform, opacity;
+}
+
+.click-hint {
+  position:fixed;
+  top:2rem;
+  right:2rem;
+  z-index:4;
+  font-family:var(--mono);
+  font-size:.62rem;
+  letter-spacing:.08em;
+  color:rgba(255,255,255,.45);
+  pointer-events:none;
+}
+
+.blob1,.blob2,.blob3 {
+  position:fixed;
+  border-radius:50%;
+  filter:blur(90px);
+  pointer-events:none;
+  z-index:1;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  will-change:transform, opacity;
+}
+
+.blob1 { width:800px; height:800px; top:-200px; left:-200px; opacity:.55; animation:cycleBlob1 60s linear infinite; }
+.blob2 { width:700px; height:700px; top:-120px; right:-180px; opacity:.45; animation:cycleBlob2 60s linear infinite; }
+.blob3 { width:600px; height:600px; bottom:-180px; left:35%; opacity:.38; animation:cycleBlob3 60s linear infinite; }
+
+@keyframes cycleBlob1 {
+  0%{background:#6020a0} 20%{background:#1040b0} 40%{background:#208050}
+  60%{background:#c85010} 80%{background:#c8a020} 100%{background:#6020a0}
+}
+@keyframes cycleBlob2 {
+  0%{background:#5030b0} 20%{background:#2050c0} 40%{background:#107040}
+  60%{background:#b04020} 80%{background:#a08010} 100%{background:#5030b0}
+}
+@keyframes cycleBlob3 {
+  0%{background:#703090} 20%{background:#304090} 40%{background:#306040}
+  60%{background:#c06030} 80%{background:#b09030} 100%{background:#703090}
+}
+
+.grid-overlay {
+  position:fixed;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:80px 80px;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  will-change:transform, opacity;
+}
+
+/* ══ SCREENS ══ */
+.screen {
+  position:fixed;
+  inset:0;
+  z-index:3;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:0 0 0 18vw;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .45s ease;
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  will-change:opacity;
+}
+.screen.active { opacity:1; pointer-events:all; }
+
+/* Home name */
+.name-line-1,.name-line-2 {
+  display:block;
+  font-family:var(--sans);
+  font-weight:700;
+  font-size:clamp(3.8rem,7vw,7rem);
+  line-height:.95;
+  letter-spacing:-.01em;
+  color:#f0eeff;
+  white-space:nowrap;
+}
+
+.name-cursor {
+  display:inline;
+  color:#f0eeff;
+  font-weight:700;
+  animation:blink .7s step-end infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.eyebrow {
+  font-family:var(--mono);
+  font-size:.68rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:#aaa;
+  margin-top:1rem;
+  margin-bottom:1.4rem;
+  opacity:0;
+  animation:fadeUp .5s .9s forwards;
+}
+
+.link-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:0;
+  margin-bottom:1.8rem;
+  opacity:0;
+  animation:fadeUp .5s 1.05s forwards;
+}
+
+.arrow-link {
+  display:inline-flex;
+  align-items:center;
+  gap:.28rem;
+  text-decoration:none;
+  font-family:var(--mono);
+  font-size:.72rem;
+  letter-spacing:.04em;
+  color:#999;
+  transition:color .25s;
+  padding-right:1.8rem;
+}
+
+.arrow-link .arr { display:inline-block; transition:transform .2s; }
+
+.arrow-link:hover { color:var(--hue-color,#b090f0); }
+
+.arrow-link:hover .arr { transform:translate(2px,-2px); }
+
+.nav-buttons {
+  display:flex;
+  gap:.8rem;
+  opacity:0;
+  animation:fadeUp .5s 1.2s forwards;
+}
+
+.nav-btn {
+  font-family:var(--mono);
+  font-size:.65rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:#aaa;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  padding:.55rem 1.1rem;
+  border-radius:3px;
+  cursor:pointer;
+  transition:color .25s,background .25s,border-color .25s;
+}
+
+.nav-btn:hover {
+  color:var(--hue-color,#b090f0);
+  background:var(--hue-bg,rgba(160,100,255,.1));
+  border-color:var(--hue-border,rgba(160,100,255,.3));
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ══ INNER SCREENS ══ */
+.inner-screen {
+  width:100%;
+  height:100vh;
+  padding:3.5rem 8vw 3.5rem 8vw;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+.back-btn {
+  font-family:var(--mono);
+  font-size:.62rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#555;
+  background:none;
+  cursor:pointer;
+  margin-bottom:2rem;
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  transition:color .2s;
+  width:fit-content;
+  flex-shrink:0;
+}
+
+.back-btn:hover { color:var(--hue-color,#aaa); }
+
+.screen-title {
+  font-family:var(--sans);
+  font-weight:700;
+  font-size:clamp(2.2rem,3.5vw,3.5rem);
+  color:#f0eeff;
+  line-height:1;
+  margin-bottom:2rem;
+  letter-spacing:-.01em;
+  flex-shrink:0;
+}
+
+.scroll-area {
+  overflow-y:auto;
+  flex:1;
+  padding-right:1rem;
+  -webkit-overflow-scrolling:touch;
+}
+
+.scroll-area::-webkit-scrollbar { width:3px; }
+.scroll-area::-webkit-scrollbar-track { background:transparent; }
+.scroll-area::-webkit-scrollbar-thumb { background:#222; border-radius:2px; }
+
+/* ── ABOUT ── */
+.about-layout {
+  display:grid;
+  grid-template-columns:1fr 340px;
+  gap:4rem;
+  align-items:start;
+  height:100%;
+}
+
+.about-text {
+  font-family:var(--sans);
+  font-size:.95rem;
+  color:#bbb;
+  line-height:1.85;
+}
+
+.about-text p+p { margin-top:1.2rem; }
+
+.about-photo-wrap {
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+
+.about-photo {
+  width:100%;
+  aspect-ratio:3/4;
+  border-radius:4px;
+  overflow:hidden;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+
+.about-photo img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.about-photo-placeholder {
+  font-family:var(--mono);
+  font-size:.55rem;
+  color:#333;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  text-align:center;
+  padding:1rem;
+}
+
+/* ── EXPERIENCE ── */
+.exp-list { display:flex; flex-direction:column; gap:2.4rem; }
+.exp-title { font-family:var(--sans); font-size:.92rem; font-weight:700; color:#e0dcf8; margin-bottom:.2rem; }
+.exp-date  { font-family:var(--mono); font-size:.58rem; color:#555; margin-bottom:.5rem; font-style:italic; }
+.exp-desc  { font-family:var(--sans); font-size:.82rem; color:#aaa; line-height:1.75; }
+
+/* ── PROJECTS ── */
+.proj-list { display:flex; flex-direction:column; gap:2.2rem; }
+.proj-header { display:flex; align-items:baseline; gap:1rem; margin-bottom:.2rem; }
+.proj-title  { font-family:var(--sans); font-size:.92rem; font-weight:700; color:#e0dcf8; }
+.proj-link   { font-family:var(--mono); font-size:.58rem; color:#444; text-decoration:none; transition:color .2s; }
+.proj-link:hover { color:var(--hue-color,#b090f0); }
+.proj-desc   { font-family:var(--sans); font-size:.82rem; color:#aaa; line-height:1.75; }
+
+@media (max-width: 980px) {
+  .screen { padding:0 7vw; }
+  .about-layout { grid-template-columns:1fr; gap:2rem; }
+  .about-photo-wrap { max-width:320px; }
+}
+
+@media (max-width: 680px) {
+  .name-line-1, .name-line-2 { white-space:normal; }
+  .click-hint { top:1rem; right:1rem; }
+  .inner-screen { padding:2rem 6vw; }
+  .proj-header { flex-direction:column; gap:.3rem; }
+}
+</style>
+
+<script type="x-shader/x-fragment" id="fragmentShader">
+uniform float u_ratio;
+uniform vec2 u_point;
+uniform float u_time;
+uniform float u_stop_time;
+uniform vec3 u_stop_randomizer;
+uniform sampler2D u_texture;
+uniform vec3 u_flower_color;
+uniform float u_fade;
+varying vec2 vUv;
+#define PI 3.14159265359
+
+vec3 mod289v3(vec3 x){return x-floor(x*(1./289.))*289.;}
+vec2 mod289v2(vec2 x){return x-floor(x*(1./289.))*289.;}
+vec3 permute(vec3 x){return mod289v3(((x*34.)+1.)*x);}
+float snoise(vec2 v){
+  const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);
+  vec2 i=floor(v+dot(v,C.yy));
+  vec2 x0=v-i+dot(i,C.xx);
+  vec2 i1=(x0.x>x0.y)?vec2(1.,0.):vec2(0.,1.);
+  vec4 x12=x0.xyxy+C.xxzz;
+  x12.xy-=i1;
+  i=mod289v2(i);
+  vec3 p=permute(permute(i.y+vec3(0.,i1.y,1.))+i.x+vec3(0.,i1.x,1.));
+  vec3 m=max(.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.);
+  m=m*m;m=m*m;
+  vec3 x=2.*fract(p*C.www)-1.;
+  vec3 h=abs(x)-.5;
+  vec3 ox=floor(x+.5);
+  vec3 a0=x-ox;
+  m*=1.79284291400159-.85373472095314*(a0*a0+h*h);
+  vec3 g;
+  g.x=a0.x*x0.x+h.x*x0.y;
+  g.yz=a0.yz*x12.xz+h.yz*x12.yw;
+  return 130.*dot(m,g);
+}
+float get_dot_shape(vec2 dist,float radius_max,float radius_line){
+  return 1.-smoothstep(radius_line*radius_max,radius_max,dot(dist,dist)*4.);
+}
+float get_stem_shape(vec2 _cursor,vec2 _uv,float _t,float _size,float _flowery,vec2 _rand){
+  float stroke_width=.01;
+  float noise_power=.2;
+  float chn=noise_power*(1.+(1.-_flowery))*snoise(3.*_uv*(_rand-.5));
+  chn*=pow(dot(_cursor.y,_cursor.y),.3*_flowery);
+  chn*=pow(dot(_uv.y,_uv.y),.3);
+  _cursor.x+=chn;
+  _cursor.y*=(1.-((1.-_flowery)*.7));
+  _cursor.y+=((1.-_flowery)*.7*_rand.x);
+  stroke_width=(1.-_flowery)*.9*pow(dot(_uv.y,_cursor.x),1.)+_flowery*.03;
+  stroke_width-=.02;
+  float left=smoothstep(-stroke_width,0.,_cursor.x);
+  float right=smoothstep(stroke_width,0.,_cursor.x);
+  float stem_shape=left*right;
+  float stem_top_mask=smoothstep(_cursor.y-.1,_cursor.y,min(-.1,_t-1.));
+  stem_shape*=stem_top_mask;
+  stem_shape+=.5*get_dot_shape(_cursor+vec2(0.,.02),.15*_size,.5);
+  stem_shape*=stem_top_mask;
+  return stem_shape;
+}
+void main(){
+  float speed=1.3;
+  float t=speed*u_stop_time;
+  vec2 uv=vUv;
+  uv+=0.00007*snoise(vUv*6.+vec2(0.,15.*cos(.1*u_time)));
+  uv.y+=0.00005;
+  vec3 prev=texture2D(u_texture,uv).xyz;
+  vec3 color=prev*u_fade;
+  vec2 cursor=uv-u_point.xy;
+  cursor.x*=u_ratio;
+  float base_radius=.02+.2*u_stop_randomizer.y;
+  float grow_duration=.6;
+  float grow_speed=2.*speed;
+  float bloom_duration=.3*u_stop_randomizer.y;
+  float is_open=step(.1,base_radius);
+  if(t<grow_duration){
+    vec3 stem_col=u_flower_color*0.9+vec3(.05,.15,.02);
+    float ss=get_stem_shape(cursor,uv,grow_speed*t,base_radius,1.,u_stop_randomizer.xy);
+    ss+=get_stem_shape(cursor,uv,grow_speed*t,0.,0.,u_stop_randomizer.yz);
+    ss+=get_stem_shape(cursor,uv,grow_speed*t,0.,0.,u_stop_randomizer.zy);
+    color+=ss*stem_col*.7;
+  }
+  if(t<grow_duration+is_open*bloom_duration){
+    float blooming_time=max(0.,pow(1.1*t,2.)-.05);
+    float radius=base_radius*blooming_time;
+    vec2 noisy_cursor=vUv-u_point.xy;
+    noisy_cursor.x*=u_ratio;
+    noisy_cursor.y*=(1.+u_stop_randomizer.y*is_open);
+    noisy_cursor-=.02*snoise(noisy_cursor*10.+vec2(0.,10.*sin(.5*t+PI)));
+    vec3 fc=u_flower_color;
+    color+=.55*get_dot_shape(noisy_cursor,1.5*radius,.0)*fc;
+    color=.75*color+.25*mix(vec3(0.02),color,1.-get_dot_shape(noisy_cursor,radius,0.));
+    noisy_cursor.y-=.02;
+    float ir=.7*radius,iw=.2*radius;
+    float rs=get_dot_shape(noisy_cursor,ir+iw,.9)-get_dot_shape(noisy_cursor,ir,.9);
+    color+=.25*blooming_time*rs*step(.1,base_radius);
+    ir=.4*radius;iw=.1*radius;
+    rs=get_dot_shape(noisy_cursor,ir+iw,.9)-get_dot_shape(noisy_cursor,ir,.9);
+    color+=.12*pow(t,.5)*rs*step(.1,base_radius);
+    vec2 lnc=vUv-u_point.xy;
+    lnc.x*=.5*u_ratio;
+    lnc.y+=.02;
+    lnc+=.01*snoise(lnc*10.+t);
+    color+=is_open*pow(t,3.)*get_dot_shape(lnc,.015*radius,0.)*vec3(1.,1.,.9);
+  }
+  gl_FragColor=vec4(clamp(color,0.,1.),1.);
+}
+</script>
+
+<script type="x-shader/x-vertex" id="vertexShader">
+varying vec2 vUv;
+void main(){ vUv=uv; gl_Position=vec4(position,1.); }
+</script>
+</head>
+<body>
+
+<canvas id="flower-canvas"></canvas>
+<div class="click-hint">Click anywhere for a surprise</div>
+<div class="blob1"></div>
+<div class="blob2"></div>
+<div class="blob3"></div>
+<div class="grid-overlay"></div>
+
+<!-- HOME -->
+<div class="screen active" id="screen-home">
+  <div>
+    <span class="name-line-1" id="name-l1">&nbsp;</span>
+    <span class="name-line-2" id="name-l2">&nbsp;</span>
+  </div>
+  <p class="eyebrow">Georgia Tech · Computer Science</p>
+  <div class="link-row">
+    <a href="#Resume" class="arrow-link"><span class="arr">↗</span> resume</a>
+    <a href="https://www.linkedin.com/in/karshin-sachdeva/" target="_blank" rel="noopener noreferrer" class="arrow-link"><span class="arr">↗</span> linkedin</a>
+    <a href="https://github.com/karsh-s" target="_blank" rel="noopener noreferrer" class="arrow-link"><span class="arr">↗</span> github</a>
+    <a href="https://www.instagram.com/karshs1/" target="_blank" rel="noopener noreferrer" class="arrow-link"><span class="arr">↗</span> instagram</a>
+  </div>
+  <div class="nav-buttons">
+    <button class="nav-btn" onclick="goTo('about')">About Me</button>
+    <button class="nav-btn" onclick="goTo('experience')">Experience</button>
+    <button class="nav-btn" onclick="goTo('projects')">Projects</button>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="screen" id="screen-about">
+  <div class="inner-screen">
+    <button class="back-btn" onclick="goTo('home')">← back</button>
+    <h2 class="screen-title">About Me</h2>
+    <div class="scroll-area">
+      <div class="about-layout">
+        <div class="about-text">
+          <p>Hi! I'm Karshin Sachdeva and I am a student at Georgia Tech studying Computer Science, specialising in System Architecture and Intelligence.</p>
+          <p>I am particularly interested in machine learning and applying deep learning to real-world problems. From creating CNNs to help me cheat at GeoGussr to building punch classification models, I love building models that are both engaging and practical.</p>
+          <p>Outside of coding, I love watching Australian Football, hooping and playing guitar. I also particularly like listening to artists like Nine Vicious and Lisa Ono. </p>
+        </div>
+        <div class="about-photo-wrap">
+          <div class="about-photo">
+            <img src="personalPhoto.jpg" alt="Karshin Sachdeva" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+            <div class="about-photo-placeholder" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCE -->
+<div class="screen" id="screen-experience">
+  <div class="inner-screen">
+    <button class="back-btn" onclick="goTo('home')">← back</button>
+    <h2 class="screen-title">Experience</h2>
+    <div class="scroll-area">
+      <div class="exp-list">
+        <div class="exp-entry">
+          <div class="exp-title">Georgia Institute of Technology — Machine Learning Developer</div>
+          <div class="exp-date">Aug 2025 – Present · Atlanta, Georgia · Big Data Big Impact</div>
+          <div class="exp-desc">Developed a (2+1)D CNN using PyTorch and NumPy to classify boxer punch types from video data and provide punching form analysis. Processed spatiotemporal data provided by MediaPipe and optimized performance using deep learning frameworks.</div>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-title">Georgia Institute of Technology — Software Team Member</div>
+          <div class="exp-date">Aug 2025 – Present · Atlanta, Georgia · RoboJackets</div>
+          <div class="exp-desc">Improved inter-robot communication using C and enhanced robot dribbling performance with real-time control logic. Debugged ROS2-based software to allow for the use of RQT tools and robot controllers in virtual machine environments.</div>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-title">Learning Dimensions Network — Junior Tech Specialist</div>
+          <div class="exp-date">Aug 2023 – Dec 2023 · Melbourne, Australia</div>
+          <div class="exp-desc">Digitized and streamlined scalable digital systems to transition in-person workshops to fully remote delivery. Developed adaptive solutions that enhanced virtual workshop performance and supported nationwide deployment.</div>
+        </div>
+
+        <div class="exp-entry">
+          <div class="exp-title">Swinburne University of Technology — Research Leader</div>
+          <div class="exp-date">Aug 2022 – Dec 2023 · Melbourne, Australia</div>
+          <div class="exp-desc">Designed and optimized experiments on microgreen fertility in zero gravity conditions after extensive data analysis. Developed an experiment using 25 vials sent to the International Space Station. Mentored a cross-disciplinary research initiative on mycelium-based infrastructure that was also sent to the ISS and featured in two documentaries.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div class="screen" id="screen-projects">
+  <div class="inner-screen">
+    <button class="back-btn" onclick="goTo('home')">← back</button>
+    <h2 class="screen-title">Projects</h2>
+    <div class="scroll-area">
+      <div class="proj-list">
+        <div class="proj-entry">
+          <div class="proj-header">
+            <div class="proj-title">Music for the Hearing-Impaired</div>
+            <a href="https://github.com/karsh-s/Music-for-the-Hearing-Impaired" target="_blank" rel="noopener noreferrer" class="proj-link">↗ view</a>
+          </div>
+          <div class="exp-date">Mar 2021 – Present</div>
+          <div class="proj-desc">Engineered a physical wristband prototype with Raspberry Pi that converts WAV files into haptic vibrations through a motor controller and stepper motors in Python. Developed an accompanying iOS app in Swift and Xcode, and a web app interface that engaged over 1,000 active participants from the Auslaners Deaf Community.</div>
+        </div>
+
+        <div class="proj-entry">
+          <div class="proj-header">
+            <div class="proj-title">Senior Citizen Mobility App</div>
+            <a href="https://github.com/karsh-s/Plant-And-Environment-Monitoring-System" target="_blank" rel="noopener noreferrer" class="proj-link">↗ view</a>
+          </div>
+          <div class="exp-date">Mar 2024 – Dec 2024</div>
+          <div class="proj-desc">Built a web app in HTML, CSS, and JavaScript that lets senior citizens personalize their mall shopping experience. Solved the Travelling Salesman Problem using A*, Dijkstra, and simulated annealing to minimize routing time complexity.</div>
+        </div>
+
+        <div class="proj-entry">
+          <div class="proj-header">
+            <div class="proj-title">GeoGuessr Cheat</div>
+            <a href="https://github.com/karsh-s/geogussr-cheat" target="_blank" rel="noopener noreferrer" class="proj-link">↗ view</a>
+          </div>
+          <div class="exp-date">Dec 2025 – Present</div>
+          <div class="proj-desc">Built a CNN using ResNet that analyzes street-view image data to identify which country a GeoGuessr screenshot was taken in. Created a custom training dataset by scraping and labeling imagery via the Google Maps API.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══ HUE ══ */
+const hueStops = [
+  {t:0,  r:96, g:32, b:160},
+  {t:.2, r:16, g:64, b:176},
+  {t:.4, r:32, g:128,b:80 },
+  {t:.6, r:200,g:80, b:16 },
+  {t:.8, r:200,g:160,b:32 },
+  {t:1,  r:96, g:32, b:160}
+];
+
+const CYCLE = 60000;
+const t0 = performance.now();
+let CR = {r:96, g:32, b:160};
+let lastHueUpdate = 0;
+
+function lerpHue(p) {
+  for (let i = 0; i < hueStops.length - 1; i++) {
+    const a = hueStops[i];
+    const b = hueStops[i + 1];
+    if (p >= a.t && p <= b.t) {
+      const f = (p - a.t) / (b.t - a.t);
+      return {
+        r: a.r + (b.r - a.r) * f,
+        g: a.g + (b.g - a.g) * f,
+        b: a.b + (b.b - a.b) * f
+      };
+    }
+  }
+  return hueStops[0];
+}
+
+function tickHue(now) {
+  if (now - lastHueUpdate > 80) {
+    const p = ((now - t0) % CYCLE) / CYCLE;
+    CR = lerpHue(p);
+
+    const ri = Math.round(CR.r);
+    const gi = Math.round(CR.g);
+    const bi = Math.round(CR.b);
+
+    document.documentElement.style.setProperty('--hue-color',
+      `rgb(${Math.min(255, ri + 90)},${Math.min(255, gi + 90)},${Math.min(255, bi + 90)})`
+    );
+    document.documentElement.style.setProperty('--hue-bg', `rgba(${ri},${gi},${bi},.12)`);
+    document.documentElement.style.setProperty('--hue-border', `rgba(${ri},${gi},${bi},.35)`);
+
+    lastHueUpdate = now;
+  }
+
+  requestAnimationFrame(tickHue);
+}
+requestAnimationFrame(tickHue);
+
+/* ══ TYPING ══ */
+const L1 = 'KARSHIN';
+const L2 = 'SACHDEVA';
+const el1 = document.getElementById('name-l1');
+const el2 = document.getElementById('name-l2');
+
+el1.innerHTML = '<span style="visibility:hidden">KARSHIN</span>';
+el2.innerHTML = '<span style="visibility:hidden">SACHDEVA</span>';
+
+let c1 = 0;
+function tL1() {
+  if (c1 <= L1.length) {
+    const s = L1.slice(0, c1);
+    const h = L1.slice(c1);
+    el1.innerHTML =
+      s +
+      (c1 < L1.length ? '<span class="name-cursor">_</span>' : '') +
+      '<span style="visibility:hidden">' + h + '</span>';
+    c1++;
+    setTimeout(tL1, c1 === 1 ? 400 : 85);
+  } else {
+    el1.textContent = L1;
+    setTimeout(tL2, 80);
+  }
+}
+
+let c2 = 0;
+function tL2() {
+  if (c2 <= L2.length) {
+    const s = L2.slice(0, c2);
+    const h = L2.slice(c2);
+    el2.innerHTML =
+      s +
+      '<span class="name-cursor">_</span>' +
+      '<span style="visibility:hidden">' + h + '</span>';
+    c2++;
+    setTimeout(tL2, 85);
+  } else {
+    el2.textContent = L2;
+  }
+}
+setTimeout(tL1, 500);
+
+/* ══ NAV ══ */
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+/* ══ WEBGL FLOWERS ══ */
+(function () {
+  const canvasEl = document.getElementById('flower-canvas');
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  s.onload = initFlowers;
+  document.head.appendChild(s);
+
+  function initFlowers() {
+    const THREE = window.THREE;
+    let renderer, shaderScene, mainScene, renderTargets, camera, clock, basicMat, shaderMat;
+
+    renderer = new THREE.WebGLRenderer({
+      canvas: canvasEl,
+      alpha: true,
+      antialias: false,
+      premultipliedAlpha: true,
+      powerPreference: 'high-performance',
+      stencil: false,
+      depth: false
+    });
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setSize(window.innerWidth, window.innerHeight, false);
+    renderer.setClearColor(0x000000, 0);
+
+    shaderScene = new THREE.Scene();
+    mainScene = new THREE.Scene();
+    camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    clock = new THREE.Clock();
+
+    function makeRT() {
+      return new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBAFormat,
+        depthBuffer: false,
+        stencilBuffer: false
+      });
+    }
+
+    renderTargets = [makeRT(), makeRT()];
+    const geo = new THREE.PlaneGeometry(2, 2);
+
+    shaderMat = new THREE.ShaderMaterial({
+      uniforms: {
+        u_ratio:           { value: window.innerWidth / window.innerHeight },
+        u_point:           { value: new THREE.Vector2(0.5, 0.5) },
+        u_time:            { value: 0 },
+        u_stop_time:       { value: 999 },
+        u_stop_randomizer: { value: new THREE.Vector3(0.5, 0.8, 0.6) },
+        u_texture:         { value: null },
+        u_flower_color:    { value: new THREE.Vector3(0.38, 0.13, 0.63) },
+        u_fade:            { value: 0.95 }
+      },
+      vertexShader: document.getElementById('vertexShader').textContent,
+      fragmentShader: document.getElementById('fragmentShader').textContent,
+      transparent: true
+    });
+
+    basicMat = new THREE.MeshBasicMaterial({ transparent: true });
+    const blackMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 1 });
+    const initMesh = new THREE.Mesh(geo, blackMat);
+
+    mainScene.add(initMesh);
+    renderer.setRenderTarget(renderTargets[0]);
+    renderer.render(mainScene, camera);
+    renderer.setRenderTarget(renderTargets[1]);
+    renderer.render(mainScene, camera);
+    mainScene.remove(initMesh);
+
+    mainScene.add(new THREE.Mesh(geo, basicMat));
+    shaderScene.add(new THREE.Mesh(geo, shaderMat));
+
+    let pending = null;
+
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('button,a,input,select,textarea')) return;
+      pending = {
+        x: e.clientX / window.innerWidth,
+        y: 1 - (e.clientY / window.innerHeight)
+      };
+    });
+
+    let resizeTimer;
+    function updateSize() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        renderer.setSize(window.innerWidth, window.innerHeight, false);
+        shaderMat.uniforms.u_ratio.value = window.innerWidth / window.innerHeight;
+        renderTargets[0].setSize(window.innerWidth, window.innerHeight);
+        renderTargets[1].setSize(window.innerWidth, window.innerHeight);
+      }, 60);
+    }
+
+    window.addEventListener('resize', updateSize);
+
+    (function loop() {
+      requestAnimationFrame(loop);
+
+      const delta = Math.min(clock.getDelta(), 0.033);
+
+      shaderMat.uniforms.u_flower_color.value.set(CR.r / 255, CR.g / 255, CR.b / 255);
+      shaderMat.uniforms.u_time.value = clock.getElapsedTime();
+
+      if (pending) {
+        shaderMat.uniforms.u_point.value.set(pending.x, pending.y);
+        shaderMat.uniforms.u_stop_randomizer.value.set(
+          0.3 + Math.random() * 0.4,
+          0.65 + Math.random() * 0.35,
+          0.3 + Math.random() * 0.7
+        );
+        shaderMat.uniforms.u_stop_time.value = 0;
+        pending = null;
+      }
+
+      shaderMat.uniforms.u_stop_time.value += delta;
+      shaderMat.uniforms.u_texture.value = renderTargets[0].texture;
+
+      renderer.setRenderTarget(renderTargets[1]);
+      renderer.render(shaderScene, camera);
+
+      basicMat.map = renderTargets[1].texture;
+
+      renderer.setRenderTarget(null);
+      renderer.render(mainScene, camera);
+
+      const tmp = renderTargets[0];
+      renderTargets[0] = renderTargets[1];
+      renderTargets[1] = tmp;
+    })();
+  }
+})();
+</script>
+</body>
+</html>
