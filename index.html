@@ -411,7 +411,7 @@ void main(){
   float bloom_duration=.3*u_stop_randomizer.y;
   float is_open=step(.1,base_radius);
   if(t<grow_duration){
-    vec3 stem_col=u_flower_color*0.9+vec3(.05,.15,.02);
+    vec3 stem_col=u_flower_color*0.94+vec3(.05,.15,.02);
     float ss=get_stem_shape(cursor,uv,grow_speed*t,base_radius,1.,u_stop_randomizer.xy);
     ss+=get_stem_shape(cursor,uv,grow_speed*t,0.,0.,u_stop_randomizer.yz);
     ss+=get_stem_shape(cursor,uv,grow_speed*t,0.,0.,u_stop_randomizer.zy);
