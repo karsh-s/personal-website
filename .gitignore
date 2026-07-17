@@ -1,0 +1,6 @@
+# Private dashboard files — never commit/deploy these
+internships.xlsx
+dashboard/dashboard-source.html
+dashboard/refresh-dashboard.md
+dashboard/refresh.log
+dashboard/com.karshin.goat-refresh.plist
