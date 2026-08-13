@@ -1,0 +1,5 @@
+# Unlisted AFL stats app. Proxied (200 = rewrite, URL stays on this domain)
+# from the aflStats GitHub Pages deployment, which holds the ~10MB data
+# snapshot so this repo stays small. Not linked from anywhere on the site.
+/statsfl/*   https://karsh-s.github.io/aflStats/:splat   200
+/statsfl     https://karsh-s.github.io/aflStats/index.html   200
