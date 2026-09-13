@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Karshin Sachdeva</title>
+<title>Projects · Karshin Sachdeva</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono&display=swap" rel="stylesheet"/>
 <style>
 *, *::before, *::after { padding:0; margin:0; box-sizing:border-box; border:0; }
@@ -334,6 +334,63 @@ body {
   .inner-screen { padding:2rem 6vw; }
   .proj-header { flex-direction:column; gap:.3rem; }
 }
+
+/* ══ CS2340 PROJECTS — full-screen scroll ══ */
+html, body { overflow-x:hidden; overflow-y:auto; height:auto; min-height:100%; }
+html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
+.proj-wrap { position:relative; z-index:3; }
+.proj-back {
+  position:fixed; top:1.8rem; left:2rem; z-index:20;
+  font-family:var(--mono); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase;
+  color:#bbb; background:rgba(8,8,8,.4); -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.12); border-radius:3px;
+  padding:.5rem .9rem; cursor:pointer; transition:color .2s,border-color .2s;
+}
+.proj-back:hover { color:var(--hue-color,#b090f0); border-color:var(--hue-border,rgba(160,100,255,.3)); }
+
+.proj-section {
+  min-height:100vh; width:100%;
+  display:grid; grid-template-columns:1.05fr .95fr; gap:5vw;
+  align-items:center; padding:9vh 8vw; scroll-snap-align:start;
+}
+.proj-left { max-width:40rem; }
+.proj-index {
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.22em;
+  color:var(--hue-color,#b090f0); margin-bottom:1.1rem;
+}
+.proj-big-title {
+  font-family:var(--sans); font-weight:700; line-height:1.02; letter-spacing:-.015em;
+  font-size:clamp(2.4rem,4.8vw,4.6rem); color:#f0eeff; margin-bottom:1rem;
+}
+.proj-big-date { font-family:var(--mono); font-size:.72rem; color:#888; font-style:italic; margin-bottom:1.5rem; }
+.proj-big-desc { font-family:var(--sans); font-size:1.02rem; color:#bbb; line-height:1.9; margin-bottom:1.8rem; }
+.proj-big-link {
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.05em; color:#aaa; text-decoration:none;
+  display:inline-flex; align-items:center; gap:.35rem; transition:color .2s;
+}
+.proj-big-link:hover { color:var(--hue-color,#b090f0); }
+.proj-media { display:flex; align-items:center; justify-content:center; }
+.img-ph {
+  width:100%; height:min(66vh,560px);
+  border-radius:8px;
+  background:rgba(255,255,255,.03); border:1px dashed rgba(255,255,255,.16);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; color:#5a5a66;
+  overflow:hidden;
+}
+.img-ph img { width:100%; height:100%; object-fit:cover; display:block; }
+.scroll-cue {
+  position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); z-index:20;
+  font-family:var(--mono); font-size:.56rem; letter-spacing:.18em; text-transform:uppercase;
+  color:rgba(255,255,255,.4); pointer-events:none; animation:cueBob 1.8s ease-in-out infinite;
+}
+@keyframes cueBob { 0%,100%{transform:translate(-50%,0)} 50%{transform:translate(-50%,6px)} }
+
+@media (max-width:900px){
+  .proj-section { grid-template-columns:1fr; gap:2rem; padding:14vh 7vw 8vh; align-content:center; }
+  .img-ph { height:auto; aspect-ratio:4/3; }
+}
+
 </style>
 
 <script type="x-shader/x-fragment" id="fragmentShader">
@@ -458,53 +515,65 @@ void main(){ vUv=uv; gl_Position=vec4(position,1.); }
 <div class="blob3"></div>
 <div class="grid-overlay"></div>
 
-<!-- PROJECTS -->
-<div class="screen active" id="screen-projects">
-  <div class="inner-screen">
-    <button class="back-btn" onclick="location.href='/CS2340'">← back</button>
-    <h2 class="screen-title">Projects</h2>
-    <div class="scroll-area">
-      <div class="proj-list">
-        <div class="proj-entry">
-          <div class="proj-header">
-            <div class="proj-title">Music for the Hearing-Impaired</div>
-            <a href="https://github.com/karsh-s/Music-for-the-Hearing-Impaired" target="_blank" rel="noopener noreferrer" class="proj-link">↗ view</a>
-          </div>
-          <div class="exp-date">Mar 2021 – Present</div>
-          <div class="proj-desc">Engineered a physical wristband prototype with Raspberry Pi that converts WAV files into haptic vibrations through a motor controller and stepper motors in Python. Developed an accompanying iOS app in Swift and Xcode, and a web app interface that engaged over 1,000 active participants from the Auslaners Deaf Community.</div>
-        </div>
+<button class="proj-back" onclick="location.href='/CS2340'">← back</button>
 
-        <div class="proj-entry">
-          <div class="proj-header">
-            <div class="proj-title">Senior Citizen Mobility App</div>
-            <a href="https://github.com/karsh-s/Plant-And-Environment-Monitoring-System" target="_blank" rel="noopener noreferrer" class="proj-link">↗ view</a>
-          </div>
-          <div class="exp-date">Mar 2024 – Dec 2024</div>
-          <div class="proj-desc">Built a web app in HTML, CSS, and JavaScript that lets senior citizens personalize their mall shopping experience. Solved the Travelling Salesman Problem using A*, Dijkstra, and simulated annealing to minimize routing time complexity.</div>
-        </div>
+<div class="proj-wrap">
 
-        <div class="proj-entry">
-          <div class="proj-header">
-            <div class="proj-title">GeoGuessr Cheat</div>
-            <a href="https://github.com/karsh-s/geogussr-cheat" target="_blank" rel="noopener noreferrer" class="proj-link">↗ view</a>
-          </div>
-          <div class="exp-date">Dec 2025 – Present</div>
-          <div class="proj-desc">Built a CNN (Convolutional Neural Network) using ResNet that analyzes street-view image data to identify which country a GeoGuessr screenshot was taken in. Created a custom training dataset by scraping and labeling imagery via the Google Maps API.</div>
-        </div>
-
-        <div class="proj-entry">
-          <div class="proj-header">
-            <div class="proj-title">Peacho - AI-powered Telecommuniactions Tool</div>
-            <a href="https://devpost.com/software/peacho" target="_blank" rel="noopener noreferrer" class="proj-link">↗ view</a>
-          </div>
-          <div class="exp-date">GTHacks Hackathon</div>
-          <div class="proj-desc">Built a voice-based healthcare assistant where an LLM processes the conversation in real time to update records, answer provider-approved medical questions, and route booking requests based on availability. Developed the system using React and Firebase for the provider dashboard and EMR, with a Python backend connected to Twilio voice calls and AssemblyAI transcription. </div>
-        </div>
-
-      </div>
+  <section class="proj-section">
+    <div class="proj-left">
+      <div class="proj-index">01 / 04</div>
+      <h2 class="proj-big-title">Music for the Hearing-Impaired</h2>
+      <div class="proj-big-date">Mar 2021 – Present</div>
+      <p class="proj-big-desc">Engineered a physical wristband prototype with Raspberry Pi that converts WAV files into haptic vibrations through a motor controller and stepper motors in Python. Developed an accompanying iOS app in Swift and Xcode, and a web app interface that engaged over 1,000 active participants from the Auslaners Deaf Community.</p>
+      <a class="proj-big-link" href="https://github.com/karsh-s/Music-for-the-Hearing-Impaired" target="_blank" rel="noopener noreferrer">↗ view project</a>
     </div>
-  </div>
+    <div class="proj-media">
+      <div class="img-ph"><span>image</span></div>
+    </div>
+  </section>
+
+  <section class="proj-section">
+    <div class="proj-left">
+      <div class="proj-index">02 / 04</div>
+      <h2 class="proj-big-title">Senior Citizen Mobility App</h2>
+      <div class="proj-big-date">Mar 2024 – Dec 2024</div>
+      <p class="proj-big-desc">Built a web app in HTML, CSS, and JavaScript that lets senior citizens personalize their mall shopping experience. Solved the Travelling Salesman Problem using A*, Dijkstra, and simulated annealing to minimize routing time complexity.</p>
+      <a class="proj-big-link" href="https://github.com/karsh-s/Plant-And-Environment-Monitoring-System" target="_blank" rel="noopener noreferrer">↗ view project</a>
+    </div>
+    <div class="proj-media">
+      <div class="img-ph"><span>image</span></div>
+    </div>
+  </section>
+
+  <section class="proj-section">
+    <div class="proj-left">
+      <div class="proj-index">03 / 04</div>
+      <h2 class="proj-big-title">GeoGuessr Cheat</h2>
+      <div class="proj-big-date">Dec 2025 – Present</div>
+      <p class="proj-big-desc">Built a CNN (Convolutional Neural Network) using ResNet that analyzes street-view image data to identify which country a GeoGuessr screenshot was taken in. Created a custom training dataset by scraping and labeling imagery via the Google Maps API.</p>
+      <a class="proj-big-link" href="https://github.com/karsh-s/geogussr-cheat" target="_blank" rel="noopener noreferrer">↗ view project</a>
+    </div>
+    <div class="proj-media">
+      <div class="img-ph"><span>image</span></div>
+    </div>
+  </section>
+
+  <section class="proj-section">
+    <div class="proj-left">
+      <div class="proj-index">04 / 04</div>
+      <h2 class="proj-big-title">Peacho — AI-powered Telecommunications Tool</h2>
+      <div class="proj-big-date">GTHacks Hackathon</div>
+      <p class="proj-big-desc">Built a voice-based healthcare assistant where an LLM processes the conversation in real time to update records, answer provider-approved medical questions, and route booking requests based on availability. Developed the system using React and Firebase for the provider dashboard and EMR, with a Python backend connected to Twilio voice calls and AssemblyAI transcription.</p>
+      <a class="proj-big-link" href="https://devpost.com/software/peacho" target="_blank" rel="noopener noreferrer">↗ view project</a>
+    </div>
+    <div class="proj-media">
+      <div class="img-ph"><span>image</span></div>
+    </div>
+  </section>
+
 </div>
+
+<div class="scroll-cue">scroll ↓</div>
 
 <script>
 /* ══ HUE ══ */
@@ -561,7 +630,7 @@ function tickHue(now) {
 requestAnimationFrame(tickHue);
 
 /* ══ TYPING ══ */
-/* (name typing removed on subpage) */
+/* (name typing not used on this page) */
 
 /* ══ NAV ══ */
 function goTo(id) {
