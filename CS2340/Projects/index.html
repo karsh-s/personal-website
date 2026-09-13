@@ -364,6 +364,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 }
 .proj-big-date { font-family:var(--mono); font-size:.72rem; color:#888; letter-spacing:.06em; margin-bottom:1.5rem; }
 .proj-big-desc { font-family:var(--sans); font-size:clamp(.9rem,1.02vw,1rem); color:#bbb; line-height:1.8; margin-bottom:1.6rem; }
+.desc-label { color:#f0eeff; font-weight:700; }
 .proj-big-link {
   font-family:var(--mono); font-size:.72rem; letter-spacing:.05em; color:#aaa; text-decoration:none;
   display:inline-flex; align-items:center; gap:.35rem; transition:color .2s;
@@ -380,11 +381,14 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 }
 .img-ph img { width:100%; height:100%; object-fit:cover; display:block; }
 .scroll-cue {
-  position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); z-index:20;
-  font-family:var(--mono); font-size:.56rem; letter-spacing:.18em; text-transform:uppercase;
-  color:rgba(255,255,255,.4); pointer-events:none; animation:cueBob 1.8s ease-in-out infinite;
+  position:fixed; bottom:1.6rem; left:50%; transform:translateX(-50%); z-index:20;
+  display:flex; flex-direction:column; align-items:center; gap:.35rem;
+  font-family:var(--mono); font-size:.82rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+  color:#fff; text-shadow:0 0 12px rgba(255,255,255,.45);
+  pointer-events:none; animation:cueBob 1.4s ease-in-out infinite;
 }
-@keyframes cueBob { 0%,100%{transform:translate(-50%,0)} 50%{transform:translate(-50%,6px)} }
+.scroll-cue .cue-arrow { font-size:1.5rem; line-height:1; }
+@keyframes cueBob { 0%,100%{transform:translate(-50%,0)} 50%{transform:translate(-50%,12px)} }
 
 @media (max-width:900px){
   .proj-section { grid-template-columns:1fr; gap:2rem; padding:14vh 7vw 8vh; align-content:center; }
@@ -524,7 +528,7 @@ void main(){ vUv=uv; gl_Position=vec4(position,1.); }
       <div class="proj-index">01 / 02</div>
       <h2 class="proj-big-title">GT Movie Store!</h2>
       <div class="proj-big-date">Django · Bootstrap · PythonAnywhere</div>
-      <p class="proj-big-desc">This is a movie store developed using Django and Bootstrap. It is also hosted on PythonAnywhere. The store has several screens which include the home screen, an about screen, movie screen and your cart/orders. Users have the ability to sign up and make accounts. They can browse movies that are available, read their description and add them to cart. Users also have the ability to write reviews. Once a review is written, they can delete the review or edit it. If a user doesn&#x27;t like what someone has said and it is inappropriate, they can report the review. Other than that, users can search for the movie and also see their previous orders. As an admin, you can manage users, movies and also reviews that are available on the GT Movie Store. On top of that, admins can see and manage orders that have been purchased through the store. As such, all user stories have been accomplished.</p>
+      <p class="proj-big-desc"><span class="desc-label">Description:</span> This is a movie store developed using Django and Bootstrap. It is also hosted on PythonAnywhere. The store has several screens which include the home screen, an about screen, movie screen and your cart/orders. Users have the ability to sign up and make accounts. They can browse movies that are available, read their description and add them to cart. Users also have the ability to write reviews. Once a review is written, they can delete the review or edit it. If a user doesn&#x27;t like what someone has said and it is inappropriate, they can report the review. Other than that, users can search for the movie and also see their previous orders. As an admin, you can manage users, movies and also reviews that are available on the GT Movie Store. On top of that, admins can see and manage orders that have been purchased through the store. As such, all user stories have been accomplished.</p>
     </div>
     <div class="proj-media"><div class="img-ph"><span>image</span></div></div>
   </section>
@@ -533,14 +537,14 @@ void main(){ vUv=uv; gl_Position=vec4(position,1.); }
     <div class="proj-left">
       <div class="proj-index">02 / 02 · The Process</div>
       <h2 class="proj-big-title">How I built it</h2>
-      <p class="proj-big-desc">I built the movie store using the provided textbook, &#x27;Django 5 for the Impatient.&#x27; Using what I learnt in the book, I edited the movie store so it is more GT-themed. If I was stuck at any point, my go-to move was to watch the video provided on the book. Otherwise, I would search the problem up and use stack overflow or w3schools or such. Once I finished the movie store, I made my personal portfolio. I used my already existing portfolio and then used generative AI to edit it for CS2340 specifically.</p>
+      <p class="proj-big-desc"><span class="desc-label">Process Description:</span> I built the movie store using the provided textbook, &#x27;Django 5 for the Impatient.&#x27; Using what I learnt in the book, I edited the movie store so it is more GT-themed. If I was stuck at any point, my go-to move was to watch the video provided on the book. Otherwise, I would search the problem up and use stack overflow or w3schools or such. Once I finished the movie store, I made my personal portfolio. I used my already existing portfolio and then used generative AI to edit it for CS2340 specifically.</p>
     </div>
     <div class="proj-media"><div class="img-ph"><span>image</span></div></div>
   </section>
 
 </div>
 
-<div class="scroll-cue">scroll ↓</div>
+<div class="scroll-cue">scroll<span class="cue-arrow">↓</span></div>
 
 <script>
 /* ══ HUE ══ */
