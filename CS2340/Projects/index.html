@@ -373,6 +373,11 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 }
 .proj-big-link:hover { color:var(--hue-color,#b090f0); }
 .proj-media { display:flex; align-items:center; justify-content:center; }
+.proj-video {
+  width:100%; aspect-ratio:16/9; max-height:min(70vh,600px);
+  border-radius:8px; background:#000; display:block;
+  border:1px solid rgba(255,255,255,.12);
+}
 .img-ph {
   width:100%; height:min(66vh,560px);
   border-radius:8px;
@@ -531,9 +536,14 @@ void main(){ vUv=uv; gl_Position=vec4(position,1.); }
       <h2 class="proj-big-title">GT Movie Store!</h2>
       <div class="proj-big-date">Django · Bootstrap · PythonAnywhere</div>
       <p class="proj-big-desc"><span class="desc-label">Description:</span> This is a movie store developed using Django and Bootstrap. It is also hosted on PythonAnywhere. The store has several screens which include the home screen, an about screen, movie screen and your cart/orders. Users have the ability to sign up and make accounts. They can browse movies that are available, read their description and add them to cart. Users also have the ability to write reviews. Once a review is written, they can delete the review or edit it. If a user doesn&#x27;t like what someone has said and it is inappropriate, they can report the review. Other than that, users can search for the movie and also see their previous orders. As an admin, you can manage users, movies and also reviews that are available on the GT Movie Store. On top of that, admins can see and manage orders that have been purchased through the store. As such, all user stories have been accomplished.</p>
-      <p class="proj-note">Note: Scroll down for Process Description ↓</p>
+      <p class="proj-note">Note: Video Description on the right → · Scroll down for Process Description ↓</p>
     </div>
-    <div class="proj-media"><div class="img-ph"><span>image</span></div></div>
+    <div class="proj-media">
+      <video class="proj-video" controls playsinline preload="metadata">
+        <source src="media/process.mp4" type="video/mp4">
+        Your browser can’t play this video. <a href="media/process.mp4">Download it instead.</a>
+      </video>
+    </div>
   </section>
 
   <section class="proj-section">
@@ -542,7 +552,12 @@ void main(){ vUv=uv; gl_Position=vec4(position,1.); }
       <h2 class="proj-big-title">How I built it</h2>
       <p class="proj-big-desc"><span class="desc-label">Process Description:</span> I built the movie store using the provided textbook, &#x27;Django 5 for the Impatient.&#x27; Using what I learnt in the book, I edited the movie store so it is more GT-themed. If I was stuck at any point, my go-to move was to watch the video provided on the book. Otherwise, I would search the problem up and use stack overflow or w3schools or such. Once I finished the movie store, I made my personal portfolio. I used my already existing portfolio and then used generative AI to edit it for CS2340 specifically.</p>
     </div>
-    <div class="proj-media"><div class="img-ph"><span>image</span></div></div>
+    <div class="proj-media">
+      <video class="proj-video" controls playsinline preload="metadata">
+        <source src="media/process.mp4" type="video/mp4">
+        Your browser can’t play this video. <a href="media/process.mp4">Download it instead.</a>
+      </video>
+    </div>
   </section>
 
 </div>
