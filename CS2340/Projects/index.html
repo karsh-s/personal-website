@@ -351,7 +351,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 .proj-section {
   min-height:100vh; width:100%;
   display:grid; grid-template-columns:1.05fr .95fr; gap:5vw;
-  align-items:center; padding:9vh 8vw; scroll-snap-align:start;
+  align-items:center; padding:8vh 8vw; scroll-snap-align:start;
 }
 .proj-left { max-width:40rem; }
 .proj-index {
@@ -362,8 +362,8 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
   font-family:var(--sans); font-weight:700; line-height:1.02; letter-spacing:-.015em;
   font-size:clamp(2.4rem,4.8vw,4.6rem); color:#f0eeff; margin-bottom:1rem;
 }
-.proj-big-date { font-family:var(--mono); font-size:.72rem; color:#888; font-style:italic; margin-bottom:1.5rem; }
-.proj-big-desc { font-family:var(--sans); font-size:1.02rem; color:#bbb; line-height:1.9; margin-bottom:1.8rem; }
+.proj-big-date { font-family:var(--mono); font-size:.72rem; color:#888; letter-spacing:.06em; margin-bottom:1.5rem; }
+.proj-big-desc { font-family:var(--sans); font-size:clamp(.9rem,1.02vw,1rem); color:#bbb; line-height:1.8; margin-bottom:1.6rem; }
 .proj-big-link {
   font-family:var(--mono); font-size:.72rem; letter-spacing:.05em; color:#aaa; text-decoration:none;
   display:inline-flex; align-items:center; gap:.35rem; transition:color .2s;
@@ -521,54 +521,21 @@ void main(){ vUv=uv; gl_Position=vec4(position,1.); }
 
   <section class="proj-section">
     <div class="proj-left">
-      <div class="proj-index">01 / 04</div>
-      <h2 class="proj-big-title">Music for the Hearing-Impaired</h2>
-      <div class="proj-big-date">Mar 2021 – Present</div>
-      <p class="proj-big-desc">Engineered a physical wristband prototype with Raspberry Pi that converts WAV files into haptic vibrations through a motor controller and stepper motors in Python. Developed an accompanying iOS app in Swift and Xcode, and a web app interface that engaged over 1,000 active participants from the Auslaners Deaf Community.</p>
-      <a class="proj-big-link" href="https://github.com/karsh-s/Music-for-the-Hearing-Impaired" target="_blank" rel="noopener noreferrer">↗ view project</a>
+      <div class="proj-index">01 / 02</div>
+      <h2 class="proj-big-title">GT Movie Store!</h2>
+      <div class="proj-big-date">Django · Bootstrap · PythonAnywhere</div>
+      <p class="proj-big-desc">This is a movie store developed using Django and Bootstrap. It is also hosted on PythonAnywhere. The store has several screens which include the home screen, an about screen, movie screen and your cart/orders. Users have the ability to sign up and make accounts. They can browse movies that are available, read their description and add them to cart. Users also have the ability to write reviews. Once a review is written, they can delete the review or edit it. If a user doesn&#x27;t like what someone has said and it is inappropriate, they can report the review. Other than that, users can search for the movie and also see their previous orders. As an admin, you can manage users, movies and also reviews that are available on the GT Movie Store. On top of that, admins can see and manage orders that have been purchased through the store. As such, all user stories have been accomplished.</p>
     </div>
-    <div class="proj-media">
-      <div class="img-ph"><span>image</span></div>
-    </div>
+    <div class="proj-media"><div class="img-ph"><span>image</span></div></div>
   </section>
 
   <section class="proj-section">
     <div class="proj-left">
-      <div class="proj-index">02 / 04</div>
-      <h2 class="proj-big-title">Senior Citizen Mobility App</h2>
-      <div class="proj-big-date">Mar 2024 – Dec 2024</div>
-      <p class="proj-big-desc">Built a web app in HTML, CSS, and JavaScript that lets senior citizens personalize their mall shopping experience. Solved the Travelling Salesman Problem using A*, Dijkstra, and simulated annealing to minimize routing time complexity.</p>
-      <a class="proj-big-link" href="https://github.com/karsh-s/Plant-And-Environment-Monitoring-System" target="_blank" rel="noopener noreferrer">↗ view project</a>
+      <div class="proj-index">02 / 02 · The Process</div>
+      <h2 class="proj-big-title">How I built it</h2>
+      <p class="proj-big-desc">I built the movie store using the provided textbook, &#x27;Django 5 for the Impatient.&#x27; Using what I learnt in the book, I edited the movie store so it is more GT-themed. If I was stuck at any point, my go-to move was to watch the video provided on the book. Otherwise, I would search the problem up and use stack overflow or w3schools or such. Once I finished the movie store, I made my personal portfolio. I used my already existing portfolio and then used generative AI to edit it for CS2340 specifically.</p>
     </div>
-    <div class="proj-media">
-      <div class="img-ph"><span>image</span></div>
-    </div>
-  </section>
-
-  <section class="proj-section">
-    <div class="proj-left">
-      <div class="proj-index">03 / 04</div>
-      <h2 class="proj-big-title">GeoGuessr Cheat</h2>
-      <div class="proj-big-date">Dec 2025 – Present</div>
-      <p class="proj-big-desc">Built a CNN (Convolutional Neural Network) using ResNet that analyzes street-view image data to identify which country a GeoGuessr screenshot was taken in. Created a custom training dataset by scraping and labeling imagery via the Google Maps API.</p>
-      <a class="proj-big-link" href="https://github.com/karsh-s/geogussr-cheat" target="_blank" rel="noopener noreferrer">↗ view project</a>
-    </div>
-    <div class="proj-media">
-      <div class="img-ph"><span>image</span></div>
-    </div>
-  </section>
-
-  <section class="proj-section">
-    <div class="proj-left">
-      <div class="proj-index">04 / 04</div>
-      <h2 class="proj-big-title">Peacho — AI-powered Telecommunications Tool</h2>
-      <div class="proj-big-date">GTHacks Hackathon</div>
-      <p class="proj-big-desc">Built a voice-based healthcare assistant where an LLM processes the conversation in real time to update records, answer provider-approved medical questions, and route booking requests based on availability. Developed the system using React and Firebase for the provider dashboard and EMR, with a Python backend connected to Twilio voice calls and AssemblyAI transcription.</p>
-      <a class="proj-big-link" href="https://devpost.com/software/peacho" target="_blank" rel="noopener noreferrer">↗ view project</a>
-    </div>
-    <div class="proj-media">
-      <div class="img-ph"><span>image</span></div>
-    </div>
+    <div class="proj-media"><div class="img-ph"><span>image</span></div></div>
   </section>
 
 </div>
