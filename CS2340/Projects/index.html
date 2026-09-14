@@ -366,6 +366,9 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 .proj-big-desc { font-family:var(--sans); font-size:clamp(.9rem,1.02vw,1rem); color:#bbb; line-height:1.8; margin-bottom:1.6rem; }
 .desc-label { color:#f0eeff; font-weight:700; }
 .proj-note { font-family:var(--mono); font-size:.74rem; letter-spacing:.04em; color:var(--hue-color,#b090f0); margin-top:.2rem; }
+.proj-url { margin:-.6rem 0 1rem; }
+.proj-url a { font-family:var(--mono); font-size:.78rem; letter-spacing:.02em; color:var(--hue-color,#b090f0); text-decoration:none; word-break:break-all; transition:color .2s; }
+.proj-url a:hover { color:#f0eeff; text-decoration:underline; }
 .click-hint { font-size:.82rem; font-weight:700; letter-spacing:.1em; color:rgba(255,255,255,.9); text-shadow:0 0 12px rgba(255,255,255,.4); }
 .proj-big-link {
   font-family:var(--mono); font-size:.72rem; letter-spacing:.05em; color:#aaa; text-decoration:none;
@@ -536,6 +539,7 @@ void main(){ vUv=uv; gl_Position=vec4(position,1.); }
       <h2 class="proj-big-title">GT Movie Store!</h2>
       <div class="proj-big-date">Django · Bootstrap · PythonAnywhere</div>
       <p class="proj-big-desc"><span class="desc-label">Description:</span> This is a movie store developed using Django and Bootstrap. It is also hosted on PythonAnywhere. The store has several screens which include the home screen, an about screen, movie screen and your cart/orders. Users have the ability to sign up and make accounts. They can browse movies that are available, read their description and add them to cart. Users also have the ability to write reviews. Once a review is written, they can delete the review or edit it. If a user doesn&#x27;t like what someone has said and it is inappropriate, they can report the review. Other than that, users can search for the movie and also see their previous orders. As an admin, you can manage users, movies and also reviews that are available on the GT Movie Store. On top of that, admins can see and manage orders that have been purchased through the store. As such, all user stories have been accomplished.</p>
+      <p class="proj-url">Live at <a href="https://ksachdeva33.pythonanywhere.com/" target="_blank" rel="noopener noreferrer">https://ksachdeva33.pythonanywhere.com/</a></p>
       <p class="proj-note">Note: Video Description on the right → · Scroll down for Process Description ↓</p>
     </div>
     <div class="proj-media">
